@@ -30,7 +30,7 @@ class Piece {
 			_value = newValue
 		}
 	}
-	var row: Int {
+	fileprivate var row: Int {
 		get {
 			return _row
 		}
@@ -43,7 +43,7 @@ class Piece {
 			}
 		}
 	}
-	var column: Character {
+	fileprivate var column: Character {
 		get {
 			return _column
 		}
@@ -57,6 +57,8 @@ class Piece {
 	}
 	
 	var isWhite: Bool = true
+	var moveCounter = 0
+	
 	
 	init(row: Int, column: Character, isWhite: Bool = true) {
 		self.row = row
@@ -66,13 +68,30 @@ class Piece {
 	
 	/// Method to get Piece position
 	/// - Returns: position as String - columnRow -> exp. "a1"
-	func getPosition() -> String {return ""}
+	func getPosition() -> String {
+		return "\(column)\(row)"
+	}
+	
+	func getPossibleMoves() -> (Bool, [String]) { return (true, [])}
 	
 	/// Method to move piece = Set new position
 	/// - Parameters:
 	///   - row: Int value representing row in range 1-8
 	///   - column: Strring value representing column in range a-h
-	func move(row: Int, column: Character) {}
+	func move(row: Int, column: Character) -> Bool {
+		let possible: (correct: Bool, moves: [String]) = getPossibleMoves()
+		if possible.correct {
+			let move: String = "\(column)\(row)"
+			if possible.moves.contains(move) {
+				self.row = row
+				self.column = column
+				self.moveCounter += 1
+				return true
+			}
+		}
+		
+		return false
+	}
 }
 
 extension Piece: CustomStringConvertible {
@@ -98,12 +117,23 @@ class Pawn: Piece {
 		self.newPiece = Pawn.checkPromote(newPiece, row, column, isWhite)
 	}
 	
-	override func getPosition() -> String {
-		return "\(column)\(row)"
+	func getPossibleMoves(attack: Bool = false) -> (Bool, [String]) {
+		return (true, [])
 	}
 	
-	override func move(row: Int, column: Character) {
-		print("Forward by 1 or 2")
+	func move(row: Int, column: Character, attack: Bool = false) -> Bool {
+		let possible: (correct: Bool, moves: [String]) = getPossibleMoves(attack: attack)
+		if possible.correct {
+			let move: String = "\(column)\(row)"
+			if possible.moves.contains(move) {
+				self.row = row
+				self.column = column
+				self.moveCounter += 1
+				return true
+			}
+		}
+		
+		return false
 	}
 	
 	override var description: String {
@@ -167,12 +197,9 @@ class Knight: Piece {
 		self.value = 2
 	}
 	
-	override func getPosition() -> String {
-		return "\(column)\(row)"
-	}
-	
-	override func move(row: Int, column: Character) {
-		print("Like an L")
+	override func getPossibleMoves() -> (Bool, [String]) {
+		//"Like an L"
+		return (true, [])
 	}
 	
 	override var description: String {
@@ -186,12 +213,9 @@ class Bishop: Piece {
 		self.value = 3
 	}
 	
-	override func getPosition() -> String {
-		return "\(column)\(row)"
-	}
-	
-	override func move(row: Int, column: Character) {
-		print("Diagonally")
+	override func getPossibleMoves() -> (Bool, [String]) {
+		//"Diagonally"
+		return (true, [])
 	}
 	
 	override var description: String {
@@ -205,12 +229,9 @@ class Rook: Piece {
 		self.value = 5
 	}
 	
-	override func getPosition() -> String {
-		return "\(column)\(row)"
-	}
-	
-	override func move(row: Int, column: Character) {
-		print("Horizontally or vertically")
+	override func getPossibleMoves() -> (Bool, [String]) {
+		//"Horizontally or vertically"
+		return (true, [])
 	}
 	
 	override var description: String {
@@ -224,12 +245,9 @@ class Queen: Piece {
 		self.value = 9
 	}
 	
-	override func getPosition() -> String {
-		return "\(column)\(row)"
-	}
-	
-	override func move(row: Int, column: Character) {
-		print("Like bishop and rook")
+	override func getPossibleMoves() -> (Bool, [String]) {
+		//"Like bishop and rook"
+		return (true, [])
 	}
 	
 	override var description: String {
@@ -243,12 +261,9 @@ class King: Piece {
 		self.value = 1000
 	}
 	
-	override func getPosition() -> String {
-		return "\(column)\(row)"
-	}
-	
-	override func move(row: Int, column: Character) {
-		print("One square")
+	override func getPossibleMoves() -> (Bool, [String]) {
+		//"One square"
+		return (true, [])
 	}
 	
 	override var description: String {
