@@ -47,7 +47,7 @@ class Game {
 	static func move(isWhite: Bool, row: Int, column: Character, newRow: Int, newColumn: Character) {
 		for piece in Game.pieces {
 			if piece.getPosition() == "\(column)\(row)" && piece.isWhite == isWhite {
-				if piece.move(row: row, column: column) {
+				if piece.move(row: newRow, column: newColumn) {
 					print("Successfuly moved!")
 				} else {
 					if piece is King {

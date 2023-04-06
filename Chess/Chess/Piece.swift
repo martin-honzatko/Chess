@@ -121,22 +121,40 @@ class Pawn: Piece {
 		let columnRange: [Character] = ["a", "b", "c", "d", "e", "f", "g", "h"]
 		var moves: [String] = []
 		var res: [String] = []
-		moves.append("\(self.column)\(self.row + 1)")
-		if self.moveCounter == 0 {
-			moves.append("\(self.column)\(self.row + 2)")
-		}
-		res = Game.checkMoves(moves)
-		moves = []
-		if let i = columnRange.firstIndex(of: self.column) {
-			if (i - 1) >= 0 {
-				moves.append("\(columnRange[i - 1])\(self.row + 1)")
-			}
-			if (i + 1) <= 7 {
-				moves.append("\(columnRange[i + 1])\(self.row + 1)")
-			}
-		}
-		res += Game.checkMoves(moves, self.isWhite)
 		
+		if self.isWhite {
+			moves.append("\(self.column)\(self.row + 1)")
+			if self.moveCounter == 0 {
+				moves.append("\(self.column)\(self.row + 2)")
+			}
+			res = Game.checkMoves(moves)
+			moves = []
+			if let i = columnRange.firstIndex(of: self.column) {
+				if (i - 1) >= 0 {
+					moves.append("\(columnRange[i - 1])\(self.row + 1)")
+				}
+				if (i + 1) <= 7 {
+					moves.append("\(columnRange[i + 1])\(self.row + 1)")
+				}
+			}
+			res += Game.checkMoves(moves, self.isWhite)
+		} else {
+			moves.append("\(self.column)\(self.row - 1)")
+			if self.moveCounter == 0 {
+				moves.append("\(self.column)\(self.row - 2)")
+			}
+			res = Game.checkMoves(moves)
+			moves = []
+			if let i = columnRange.firstIndex(of: self.column) {
+				if (i - 1) >= 0 {
+					moves.append("\(columnRange[i - 1])\(self.row - 1)")
+				}
+				if (i + 1) <= 7 {
+					moves.append("\(columnRange[i + 1])\(self.row - 1)")
+				}
+			}
+			res += Game.checkMoves(moves, self.isWhite)
+		}
 		return ((res.isEmpty) ? false : true, res)
 	}
 	
