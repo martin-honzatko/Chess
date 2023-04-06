@@ -28,7 +28,7 @@ func play() {
 			print("\((isWhite) ? "Black" : "White") has won!")
 			run = false
 		} else if usrInput.lowercased() == "moves" {
-			Game.printMoves()
+			Game.printMoves(isWhite: isWhite)
 		} else {
 			if usrInput.count == 2 {
 				Game.printMoves(usrInput)

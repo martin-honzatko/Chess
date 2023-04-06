@@ -12,16 +12,18 @@ class Game {
 	private static let rowRange: ClosedRange<Int> = 1...8
 	private static let columnRange: [Character] = ["a", "b", "c", "d", "e", "f", "g", "h"]
 	
-	static func printMoves() {
+	static func printMoves(isWhite: Bool) {
 		print("Possible moves:")
 		for piece in Game.pieces {
-			print("\(piece.getPosition()) - {", terminator: "")
-			let poss: (correct: Bool, moves: [String]) = piece.getPossibleMoves()
-			if poss.correct {
-				for i in 0..<(poss.moves.count - 1) {
-					print("\(poss.moves[i])", terminator: ", ")
+			if piece.isWhite == isWhite {
+				print("\(piece.getPosition()) - {", terminator: "")
+				let poss: (correct: Bool, moves: [String]) = piece.getPossibleMoves()
+				if poss.correct {
+					for i in 0..<(poss.moves.count - 1) {
+						print("\(poss.moves[i])", terminator: ", ")
+					}
+					print("\(poss.moves[poss.moves.count - 1])}")
 				}
-				print("\(poss.moves[poss.moves.count - 1])}")
 			}
 		}
 	}
