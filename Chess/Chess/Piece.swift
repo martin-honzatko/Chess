@@ -267,7 +267,7 @@ class King: Piece {
 	}
 	
 	override var description: String {
-		return "King(position: \(self.getPosition()), value: \(self.value), "\(self.isWhite ? "♔" : "♚")"
+		return "\(self.isWhite ? "♔" : "♚")"
 	}
 }
 
