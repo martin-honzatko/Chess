@@ -11,24 +11,101 @@ class Game {
 	private static var pieces: [Piece] = []
 	private static let rowRange: ClosedRange<Int> = 1...8
 	private static let columnRange: [Character] = ["a", "b", "c", "d", "e", "f", "g", "h"]
-//	private var piecesPositions: [(p: String, isWhite: Bool)] = []
-//	static func ckeckPositions(positions: [String], isWhite: Bool) -> [String] {
-//		var res: [String] = []
-//		for pos in positions {
-//			if piecesPositions.p {
-//				res.append(pos)
-//			}
-//		}
-//
-//		return res
-//	}
 	
 	static func play() {
 		Game.createDefaultBoard()
 		Game.printBoard()
+		var end: Bool = false
+		var isWhite: Bool = true
+		print("Welcome to chess!")
+		
+		while !end {
+			print()
+		}
 	}
 	
-	static func printBoard() {
+	private static func check(isWhite: Bool) -> Bool {
+		var king = Piece(row: 1, column: "a")
+		for piece in Game.pieces {
+			if piece is King && piece.isWhite != isWhite {
+				king = piece
+			}
+		}
+		
+		for piece in Game.pieces {
+			let poss: (correct: Bool, moves: [String]) = piece.getPossibleMoves()
+			if poss.correct && piece != king {
+				if poss.moves.contains(king.getPosition()) {
+					return true
+				}
+			}
+		}
+		
+		return false
+	}
+	
+	static func checkPossCheck(_ moves: [String]) -> [String] {
+		var moves = moves
+		for piece in Game.pieces {
+			let poss: (correct: Bool, moves: [String]) = piece.getPossibleMoves()
+			if poss.correct {
+				for move in moves {
+					if poss.moves.contains(move) {
+						if let i = moves.firstIndex(of: move) {
+							moves.remove(at: i)
+						}
+					}
+				}
+			}
+		}
+		
+		return moves
+	}
+	
+	static func checkMoves(_ moves: [String]) -> [String] {
+		var moves = moves
+		for piece in Game.pieces {
+			for move in moves {
+				if piece.getPosition() == move {
+					if let i = moves.firstIndex(of: move) {
+						moves.remove(at: i)
+					}
+				}
+			}
+		}
+		
+		return moves
+	}
+	
+	static func checkMoves(_ moves: [String], _ isWhite: Bool) -> [String] {
+		var moves = moves
+		for piece in Game.pieces {
+			for move in moves {
+				if piece.getPosition() == move && piece.isWhite == isWhite {
+					if let i = moves.firstIndex(of: move) {
+						moves.remove(at: i)
+					}
+				}
+			}
+		}
+		
+		return moves
+	}
+	
+	static func checkMoves(_ move: String) -> (Bool, Bool) {
+		var isPiece: Bool = false
+		var wOrB: Bool = false
+		for piece in Game.pieces {
+			if piece.getPosition() == move {
+				wOrB = piece.isWhite
+				isPiece = true
+			}
+		}
+		
+		return (isPiece, wOrB)
+	}
+	
+	private static func printBoard() {
 		print()
 		for row in rowRange.reversed() {
 			for col in columnRange {
