@@ -17,7 +17,7 @@ import Foundation
 class Piece {
 	private var _value: Int = 0
 	private var _row: Int = 0
-	private var _column: Character = Character("")
+	private var _column: Character = Character("a")
 	private let rowRange: ClosedRange<Int> = 1...8
 	private let columnRange: [Character] = ["a", "b", "c", "d", "e", "f", "g", "h"]
 	
@@ -30,7 +30,7 @@ class Piece {
 			_value = newValue
 		}
 	}
-	fileprivate var row: Int {
+	var row: Int {
 		get {
 			return _row
 		}
@@ -43,7 +43,7 @@ class Piece {
 			}
 		}
 	}
-	fileprivate var column: Character {
+	var column: Character {
 		get {
 			return _column
 		}
@@ -79,7 +79,7 @@ class Piece {
 	///   - row: Int value representing row in range 1-8
 	///   - column: Strring value representing column in range a-h
 	func move(row: Int, column: Character) -> Bool {
-		let possible: (correct: Bool, moves: [String]) = getPossibleMoves()
+		let possible: (correct: Bool, moves: [String]) = self.getPossibleMoves()
 		if possible.correct {
 			let move: String = "\(column)\(row)"
 			if possible.moves.contains(move) {
@@ -137,7 +137,7 @@ class Pawn: Piece {
 	}
 	
 	override var description: String {
-		return "\(self.isWhite ? "♙" : "♟")"
+		return "\(self.isWhite ? "♟" : "♙")"
 	}
 }
 
@@ -203,7 +203,7 @@ class Knight: Piece {
 	}
 	
 	override var description: String {
-		return "\(self.isWhite ? "♘" : "♞")"
+		return "\(self.isWhite ? "♞" : "♘")"
 	}
 }
 
@@ -219,7 +219,7 @@ class Bishop: Piece {
 	}
 	
 	override var description: String {
-		return "\(self.isWhite ? "♗" : "♝")"
+		return "\(self.isWhite ? "♝" : "♗")"
 	}
 }
 
@@ -235,7 +235,7 @@ class Rook: Piece {
 	}
 	
 	override var description: String {
-		return "\(self.isWhite ? "♖" : "♜")"
+		return "\(self.isWhite ? "♜" : "♖")"
 	}
 }
 
@@ -251,7 +251,7 @@ class Queen: Piece {
 	}
 	
 	override var description: String {
-		return "\(self.isWhite ? "♕" : "♛")"
+		return "\(self.isWhite ? "♛" : "♕")"
 	}
 }
 
@@ -267,7 +267,7 @@ class King: Piece {
 	}
 	
 	override var description: String {
-		return "\(self.isWhite ? "♔" : "♚")"
+		return "\(self.isWhite ? "♚" : "♔")"
 	}
 }
 
