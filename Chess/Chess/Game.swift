@@ -12,19 +12,56 @@ class Game {
 	private static let rowRange: ClosedRange<Int> = 1...8
 	private static let columnRange: [Character] = ["a", "b", "c", "d", "e", "f", "g", "h"]
 	
-	static func play() {
-		Game.createDefaultBoard()
-		Game.printBoard()
-		var end: Bool = false
-		var isWhite: Bool = true
-		print("Welcome to chess!")
-		
-		while !end {
-			print()
+	static func printMoves() {
+		print("Possible moves:")
+		for piece in Game.pieces {
+			print("\(piece.getPosition()) - {", terminator: "")
+			let poss: (correct: Bool, moves: [String]) = piece.getPossibleMoves()
+			if poss.correct {
+				for i in 0..<(poss.moves.count - 1) {
+					print("\(poss.moves[i])", terminator: ", ")
+				}
+				print("\(poss.moves[poss.moves.count - 1])}")
+			}
 		}
 	}
 	
-	private static func check(isWhite: Bool) -> Bool {
+	static func printMoves(_ pos: String) {
+		guard pos.count == 2 else {
+			return
+		}
+		for piece in Game.pieces {
+			if piece.getPosition() == pos {
+				print("Possible moves of \(piece.getPosition()): {", terminator: "")
+				let poss: (correct: Bool, moves: [String]) = piece.getPossibleMoves()
+				if poss.correct {
+					for i in 0..<(poss.moves.count - 1) {
+						print("\(poss.moves[i])", terminator: ", ")
+					}
+					print("\(poss.moves[poss.moves.count - 1])}")
+				}
+			}
+		}
+	}
+	
+	static func move(isWhite: Bool, row: Int, column: Character, newRow: Int, newColumn: Character) {
+		for piece in Game.pieces {
+			if piece.getPosition() == "\(column)\(row)" && piece.isWhite == isWhite {
+				if piece.move(row: row, column: column) {
+					print("Successfuly moved!")
+				} else {
+					if piece is King {
+						if Game.check(isWhite: isWhite) {
+							print("Check on \((isWhite) ? "Black" : "White")!")
+						}
+					}
+					print("Illegal move, please try again")
+				}
+			}
+		}
+	}
+	
+	static func check(isWhite: Bool) -> Bool {
 		var king = Piece(row: 1, column: "a")
 		for piece in Game.pieces {
 			if piece is King && piece.isWhite != isWhite {
@@ -105,7 +142,7 @@ class Game {
 		return (isPiece, wOrB)
 	}
 	
-	private static func printBoard() {
+	static func printBoard() {
 		print()
 		for row in rowRange.reversed() {
 			for col in columnRange {
@@ -129,7 +166,7 @@ class Game {
 		return false
 	}
 	
-	private static func createDefaultBoard() {
+	static func createDefaultBoard() {
 		//Pawns
 		for col in Game.columnRange {
 			pieces.append(Pawn(row: 2, column: col))
