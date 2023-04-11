@@ -11,7 +11,7 @@ class Game {
 	/************************************************************/
 	/*		CONSTANTS AND VARIABLES		   */
 	/************************************************************/
-	private static var pieces: [Piece] = []
+	private(set) static var pieces: [Piece] = []
 	private static let rowRange: ClosedRange<Int> = 1...8
 	private static let columnRange: [Character] = ["a", "b", "c", "d", "e", "f", "g", "h"]
 	
@@ -151,26 +151,21 @@ class Game {
 	/************************************************************/
 	/*			 MOVE CHECKERS			   */
 	/************************************************************/
-	static func checkPossCheck(_ moves: [String]) -> [String] {
-		var moves = moves
+	static func checkPossCheck(_ moves: [String], _ isWhite: Bool) -> [String] {
+		var possMoves: [String] = []
+		var res: [String] = []
 		for piece in Game.pieces {
 			if moves.isEmpty { break }
-			let poss: (correct: Bool, moves: [String]) = piece.getPossibleMoves()
-			if poss.correct {
-				if poss.moves.isEmpty { continue } else {
-					for move in moves {
-						if poss.moves.contains(move) {
-							if let i = moves.firstIndex(of: move) {
-								moves.remove(at: i)
-							}
-						} else { continue }
-					}
-				}
-				
-			} else { continue }
+			if (piece is King && piece.isWhite == isWhite) || piece.isWhite == isWhite { continue } else {
+				let poss: (correct: Bool, moves: [String]) = piece.getPossibleMoves()
+				if poss.correct { possMoves += poss.moves }
+			}
+		}
+		for move in moves {
+			if possMoves.contains(move) { continue } else { res.append(move) }
 		}
 		
-		return moves
+		return res
 	}
 	
 	static func checkAttacks(_ attacks: [String], _ isWhite: Bool) -> [String] {

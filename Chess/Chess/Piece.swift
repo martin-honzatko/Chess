@@ -556,8 +556,8 @@ class King: Piece {
 			if row < 8 { moves.append("\(colRange[i])\(row + 1)") }
 		}
 		let temp: [String] = Game.checkMoves(moves)
-		//res = Game.checkPossCheck(temp)
-		res = temp
+		res = Game.checkPossCheck(temp, self.isWhite)
+		//res = temp
 		
 		return ((res.isEmpty) ? false : true, res)
 	}
