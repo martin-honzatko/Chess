@@ -19,14 +19,18 @@ func play() {
 	var checkCountB: Int = 0
 	var checkRound: Int = 0
 	var checkMate: Bool = false
+	var checked: Bool = false
 	print("Welcome to chess!")
 	
 	while run {
 		Game.printBoard()
-		check = Game.check(isWhite: isWhite)
-		if check {
-			if checkRound >= 2 { checkMate = true }
-		} else { checkRound = 0 }
+		if checked {
+			check = Game.check(isWhite: isWhite)
+			if check {
+				if checkRound >= 2 { checkMate = true }
+			} else { checkRound = 0; checked = false }
+		}
+		
 		print("[type 'help' for help] \((isWhite) ? "White:" : "Black:")", terminator: " ")
 		let usrInput: String = readLine() ?? ""
 		if usrInput.lowercased() == "help" {
@@ -68,6 +72,7 @@ func play() {
 						print("\((isWhite) ? "White:" : "Black:") calls check on \((isWhite) ? "Black" : "White")")
 						if isWhite { checkCountW += 1 } else { checkCountB += 1 }
 						checkRound += 1
+						checked = true
 					} else {
 						if isWhite { checkCountW = 0 } else { checkCountB = 0 }
 						if checkRound >= 1 { checkRound += 1 }
