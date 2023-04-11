@@ -56,7 +56,7 @@ func play() {
 					}
 				}
 			} else {
-				print("Illegal command, please try again")
+				print("Illegal command, please try again!")
 			}
 		}
 		
@@ -75,4 +75,22 @@ private func help() {
 	print("* type 'moves' to list all possible moves")
 	print("* type a square (e.g. b1, e2) to list possible moves for that square")
 	print("* type UCI (e.g. b1c3, e7e8q) to make a move")
+}
+
+func promotePawn() -> Piece {
+	print("Promote Pawn to [Bishop, Knight, Queen, Rook]:", terminator: " ")
+	let usrInput: String = readLine() ?? ""
+	switch usrInput.lowercased() {
+		case "bishop":
+			return Bishop(row: 1, column: "a")
+		case "knight":
+			return Knight(row: 1, column: "a")
+		case "queen":
+			return Queen(row: 1, column: "a")
+		case "rook":
+			return Rook(row: 1, column: "a")
+		default:
+			print("Illegal command, please try again!")
+	}
+	return Piece(row: 1, column: "a")
 }

@@ -21,11 +21,42 @@ class Game {
 	static func move(isWhite: Bool, row: Int, column: Character, newRow: Int, newColumn: Character) {
 		for piece in Game.pieces {
 			if piece.getPosition() == "\(column)\(row)" && piece.isWhite == isWhite {
-				if piece.move(row: newRow, column: newColumn) {
-					print("Successfuly moved!")
+				if piece is Pawn {
+					if let p = piece as? Pawn {
+						if p.promoted {
+							if let p = p.newPiece {
+								if p.move(row: newRow, column: newColumn) {
+									print("Successfuly moved!")
+								} else {
+									print("Illegal move, please try again")
+								}
+							}
+						} else {
+							if piece.move(row: newRow, column: newColumn) {
+								print("Successfuly moved!")
+								if piece is Pawn && ((isWhite && newRow == 8) || (!isWhite && newRow == 1)) {
+									if let p = piece as? Pawn {
+										p.promote(promotePawn())
+									}
+								}
+							} else {
+								print("Illegal move, please try again")
+							}
+						}
+					}
 				} else {
-					print("Illegal move, please try again")
+					if piece.move(row: newRow, column: newColumn) {
+						print("Successfuly moved!")
+						if piece is Pawn && ((isWhite && newRow == 8) || (!isWhite && newRow == 1)) {
+							if let p = piece as? Pawn {
+								p.promote(promotePawn())
+							}
+						}
+					} else {
+						print("Illegal move, please try again")
+					}
 				}
+				
 			}
 		}
 	}
@@ -167,20 +198,59 @@ class Game {
 		print("Possible moves:")
 		for piece in Game.pieces {
 			if piece.isWhite == isWhite {
-				print("\(piece.getPosition()) - {", terminator: "")
-				let poss: (correct: Bool, moves: [String]) = piece.getPossibleMoves()
-				if poss.correct {
-					if poss.moves.isEmpty {
-						print(" No moves! }")
-					} else {
-						for i in 0..<(poss.moves.count - 1) {
-							print("\(poss.moves[i])", terminator: ", ")
+				if piece is Pawn {
+					if let p = piece as? Pawn {
+						if p.promoted {
+							if let p = p.newPiece {
+								print("\(p.getPosition()) - {", terminator: "")
+								let poss: (correct: Bool, moves: [String]) = p.getPossibleMoves()
+								if poss.correct {
+									if poss.moves.isEmpty {
+										print(" No moves! }")
+									} else {
+										for i in 0..<(poss.moves.count - 1) {
+											print("\(poss.moves[i])", terminator: ", ")
+										}
+										print("\(poss.moves[poss.moves.count - 1])}")
+									}
+								} else {
+									print(" No moves! }")
+								}
+							}
+						} else {
+							print("\(piece.getPosition()) - {", terminator: "")
+							let poss: (correct: Bool, moves: [String]) = piece.getPossibleMoves()
+							if poss.correct {
+								if poss.moves.isEmpty {
+									print(" No moves! }")
+								} else {
+									for i in 0..<(poss.moves.count - 1) {
+										print("\(poss.moves[i])", terminator: ", ")
+									}
+									print("\(poss.moves[poss.moves.count - 1])}")
+								}
+							} else {
+								print(" No moves! }")
+							}
 						}
-						print("\(poss.moves[poss.moves.count - 1])}")
 					}
 				} else {
-					print(" No moves! }")
+					print("\(piece.getPosition()) - {", terminator: "")
+					let poss: (correct: Bool, moves: [String]) = piece.getPossibleMoves()
+					if poss.correct {
+						if poss.moves.isEmpty {
+							print(" No moves! }")
+						} else {
+							for i in 0..<(poss.moves.count - 1) {
+								print("\(poss.moves[i])", terminator: ", ")
+							}
+							print("\(poss.moves[poss.moves.count - 1])}")
+						}
+					} else {
+						print(" No moves! }")
+					}
 				}
+				
 			}
 		}
 	}
@@ -191,20 +261,59 @@ class Game {
 		}
 		for piece in Game.pieces {
 			if piece.getPosition() == pos {
-				print("Possible moves of \(piece.getPosition()): {", terminator: "")
-				let poss: (correct: Bool, moves: [String]) = piece.getPossibleMoves()
-				if poss.correct {
-					if poss.moves.isEmpty {
-						print(" No moves! }")
-					} else {
-						for i in 0..<(poss.moves.count - 1) {
-							print("\(poss.moves[i])", terminator: ", ")
+				if piece is Pawn {
+					if let p = piece as? Pawn {
+						if p.promoted {
+							if let p = p.newPiece {
+								print("Possible moves of \(p.getPosition()): {", terminator: "")
+								let poss: (correct: Bool, moves: [String]) = p.getPossibleMoves()
+								if poss.correct {
+									if poss.moves.isEmpty {
+										print(" No moves! }")
+									} else {
+										for i in 0..<(poss.moves.count - 1) {
+											print("\(poss.moves[i])", terminator: ", ")
+										}
+										print("\(poss.moves[poss.moves.count - 1])}")
+									}
+								} else {
+									print(" No moves! }")
+								}
+							}
+						} else {
+							print("Possible moves of \(piece.getPosition()): {", terminator: "")
+							let poss: (correct: Bool, moves: [String]) = piece.getPossibleMoves()
+							if poss.correct {
+								if poss.moves.isEmpty {
+									print(" No moves! }")
+								} else {
+									for i in 0..<(poss.moves.count - 1) {
+										print("\(poss.moves[i])", terminator: ", ")
+									}
+									print("\(poss.moves[poss.moves.count - 1])}")
+								}
+							} else {
+								print(" No moves! }")
+							}
 						}
-						print("\(poss.moves[poss.moves.count - 1])}")
 					}
 				} else {
-					print(" No moves! }")
+					print("Possible moves of \(piece.getPosition()): {", terminator: "")
+					let poss: (correct: Bool, moves: [String]) = piece.getPossibleMoves()
+					if poss.correct {
+						if poss.moves.isEmpty {
+							print(" No moves! }")
+						} else {
+							for i in 0..<(poss.moves.count - 1) {
+								print("\(poss.moves[i])", terminator: ", ")
+							}
+							print("\(poss.moves[poss.moves.count - 1])}")
+						}
+					} else {
+						print(" No moves! }")
+					}
 				}
+				
 			}
 		}
 	}

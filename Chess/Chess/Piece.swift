@@ -7,12 +7,10 @@
 
 import Foundation
 
-// FOR SAM: Pawn can move forward by 2 from default position otherwise only by 1 - it's going to be implemented in move method -> only for info
-
 // TODO:
 // Implement move functionality + figure how to implement Pawn taking because it's 1 forward vertically
 // Add and implement casting functionality
-// Add and implement casting functionality
+// Add and implement en passant functionality
 
 class Piece {
 	private var _value: Int = 0
@@ -108,7 +106,7 @@ extension Piece: Equatable {
 
 class Pawn: Piece {
 	private(set) var promoted: Bool = false
-	private var newPiece: Piece?
+	private(set) var newPiece: Piece?
 	
 	init(row: Int, column: Character, isWhite: Bool = true, promoted: Bool = false, newPiece: Piece? = nil) {
 		super.init(row: row, column: column, isWhite: isWhite)
@@ -205,6 +203,7 @@ extension Pawn {
 		newPiece.row = self.row
 		newPiece.column = self.column
 		newPiece.isWhite = self.isWhite
+		newPiece.moveCounter = self.moveCounter
 		self.newPiece = newPiece
 	}
 }
