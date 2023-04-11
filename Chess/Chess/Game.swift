@@ -19,10 +19,16 @@ class Game {
 				print("\(piece.getPosition()) - {", terminator: "")
 				let poss: (correct: Bool, moves: [String]) = piece.getPossibleMoves()
 				if poss.correct {
-					for i in 0..<(poss.moves.count - 1) {
-						print("\(poss.moves[i])", terminator: ", ")
+					if poss.moves.isEmpty {
+						print(" No moves! }")
+					} else {
+						for i in 0..<(poss.moves.count - 1) {
+							print("\(poss.moves[i])", terminator: ", ")
+						}
+						print("\(poss.moves[poss.moves.count - 1])}")
 					}
-					print("\(poss.moves[poss.moves.count - 1])}")
+				} else {
+					print(" No moves! }")
 				}
 			}
 		}
@@ -45,7 +51,6 @@ class Game {
 						}
 						print("\(poss.moves[poss.moves.count - 1])}")
 					}
-					
 				} else {
 					print(" No moves! }")
 				}

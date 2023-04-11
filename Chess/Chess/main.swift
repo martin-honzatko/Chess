@@ -23,7 +23,7 @@ func play() {
 	
 	while run {
 		Game.printBoard()
-		check = Game.check(isWhite: isWhite) //ERROR! - Thread 1: EXC_BAD_ACCESS (code=2, address=0x16f603b00) - Pawn.getPossibleMoves() constant columnRange
+		check = Game.check(isWhite: isWhite)
 		if check {
 			if checkRound >= 2 { checkMate = true }
 		} else { checkRound = 0 }
@@ -37,7 +37,6 @@ func play() {
 			print("\((isWhite) ? "Black" : "White") has won!")
 			run = false
 		} else if usrInput.lowercased() == "moves" {
-			print("ERROR! - Thread 1: EXC_BAD_ACCESS (code=2, address=0x16f603b00) - For King's - Wasn't able to solve!")
 			Game.printMoves(isWhite: isWhite)
 		} else {
 			if usrInput.count == 2 {
