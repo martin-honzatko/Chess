@@ -37,10 +37,17 @@ class Game {
 				print("Possible moves of \(piece.getPosition()): {", terminator: "")
 				let poss: (correct: Bool, moves: [String]) = piece.getPossibleMoves()
 				if poss.correct {
-					for i in 0..<(poss.moves.count - 1) {
-						print("\(poss.moves[i])", terminator: ", ")
+					if poss.moves.isEmpty {
+						print(" No moves! }")
+					} else {
+						for i in 0..<(poss.moves.count - 1) {
+							print("\(poss.moves[i])", terminator: ", ")
+						}
+						print("\(poss.moves[poss.moves.count - 1])}")
 					}
-					print("\(poss.moves[poss.moves.count - 1])}")
+					
+				} else {
+					print(" No moves! }")
 				}
 			}
 		}
@@ -52,11 +59,6 @@ class Game {
 				if piece.move(row: newRow, column: newColumn) {
 					print("Successfuly moved!")
 				} else {
-					if piece is King {
-						if Game.check(isWhite: isWhite) {
-							print("Check on \((isWhite) ? "Black" : "White")!")
-						}
-					}
 					print("Illegal move, please try again")
 				}
 			}
@@ -64,19 +66,22 @@ class Game {
 	}
 	
 	static func check(isWhite: Bool) -> Bool {
-		var king = Piece(row: 1, column: "a")
+		var king: Piece = King(row: 1, column: "a")
 		for piece in Game.pieces {
 			if piece is King && piece.isWhite != isWhite {
 				king = piece
 			}
 		}
 		
+		let kPos: (correct: Bool, moves: [String]) = king.getPossibleMoves()
+		let kPosSet: Set = Set(kPos.moves)
+		
 		for piece in Game.pieces {
-			let poss: (correct: Bool, moves: [String]) = piece.getPossibleMoves()
-			if poss.correct && piece != king {
-				if poss.moves.contains(king.getPosition()) {
-					return true
-				}
+			let pPos: (correct: Bool, moves: [String]) = piece.getPossibleMoves()
+			let kPos: (correct: Bool, moves: [String]) = king.getPossibleMoves()
+			if pPos.correct && kPos.correct {
+				let pPosSet: Set = Set(pPos.moves)
+				if kPosSet.isSubset(of: pPosSet) { return true }
 			}
 		}
 		
@@ -86,19 +91,38 @@ class Game {
 	static func checkPossCheck(_ moves: [String]) -> [String] {
 		var moves = moves
 		for piece in Game.pieces {
+			if moves.isEmpty { break }
 			let poss: (correct: Bool, moves: [String]) = piece.getPossibleMoves()
 			if poss.correct {
-				for move in moves {
-					if poss.moves.contains(move) {
-						if let i = moves.firstIndex(of: move) {
-							moves.remove(at: i)
-						}
+				if poss.moves.isEmpty { continue } else {
+					for move in moves {
+						if poss.moves.contains(move) {
+							if let i = moves.firstIndex(of: move) {
+								moves.remove(at: i)
+							}
+						} else { continue }
 					}
+				}
+				
+			} else { continue }
+		}
+		
+		return moves
+	}
+	
+	static func checkAttacks(_ attacks: [String], _ isWhite: Bool) -> [String] {
+		var res: [String] = []
+		
+		
+		for piece in Game.pieces {
+			for attack in attacks {
+				if piece.getPosition() == attack && piece.isWhite != isWhite {
+					res.append(attack)
 				}
 			}
 		}
 		
-		return moves
+		return res
 	}
 	
 	static func checkMoves(_ moves: [String]) -> [String] {

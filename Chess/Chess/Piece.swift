@@ -120,6 +120,7 @@ class Pawn: Piece {
 	override func getPossibleMoves() -> (Bool, [String]) {
 		let columnRange: [Character] = ["a", "b", "c", "d", "e", "f", "g", "h"]
 		var moves: [String] = []
+		var attacks: [String] = []
 		var res: [String] = []
 		
 		if self.isWhite {
@@ -131,13 +132,13 @@ class Pawn: Piece {
 			moves = []
 			if let i = columnRange.firstIndex(of: self.column) {
 				if (i - 1) >= 0 {
-					moves.append("\(columnRange[i - 1])\(self.row + 1)")
+					attacks.append("\(columnRange[i - 1])\(self.row + 1)")
 				}
 				if (i + 1) <= 7 {
-					moves.append("\(columnRange[i + 1])\(self.row + 1)")
+					attacks.append("\(columnRange[i + 1])\(self.row + 1)")
 				}
 			}
-			res += Game.checkMoves(moves, self.isWhite)
+			res += Game.checkMoves(moves, self.isWhite) + Game.checkAttacks(attacks, self.isWhite)
 		} else {
 			moves.append("\(self.column)\(self.row - 1)")
 			if self.moveCounter == 0 {
@@ -147,14 +148,15 @@ class Pawn: Piece {
 			moves = []
 			if let i = columnRange.firstIndex(of: self.column) {
 				if (i - 1) >= 0 {
-					moves.append("\(columnRange[i - 1])\(self.row - 1)")
+					attacks.append("\(columnRange[i - 1])\(self.row - 1)")
 				}
 				if (i + 1) <= 7 {
-					moves.append("\(columnRange[i + 1])\(self.row - 1)")
+					attacks.append("\(columnRange[i + 1])\(self.row - 1)")
 				}
 			}
-			res += Game.checkMoves(moves, self.isWhite)
+			res += Game.checkMoves(moves, self.isWhite) + Game.checkAttacks(attacks, self.isWhite)
 		}
+		
 		return ((res.isEmpty) ? false : true, res)
 	}
 	
@@ -226,12 +228,12 @@ class Knight: Piece {
 		var res: [String] = []
 		if let i = columnRange.firstIndex(of: self.column) {
 			if (i - 2) >= 0 {
-				moves.append("\(columnRange[i - 2])\(self.row - 1)")
-				moves.append("\(columnRange[i - 2])\(self.row + 1)")
+				if self.row > 1 { moves.append("\(columnRange[i - 2])\(self.row - 1)") }
+				if self.row < 8 { moves.append("\(columnRange[i - 2])\(self.row + 1)") }
 			}
 			if (i + 2) <= 7 {
-				moves.append("\(columnRange[i + 2])\(self.row - 1)")
-				moves.append("\(columnRange[i + 2])\(self.row + 1)")
+				if self.row > 1 { moves.append("\(columnRange[i + 2])\(self.row - 1)") }
+				if self.row < 8 { moves.append("\(columnRange[i + 2])\(self.row + 1)") }
 			}
 			let row = self.row
 			if (row - 2) >= 1 {
@@ -270,7 +272,7 @@ class Bishop: Piece {
 	override func getPossibleMoves() -> (Bool, [String]) {
 		let columnRange: [Character] = ["a", "b", "c", "d", "e", "f", "g", "h"]
 		var res: [String] = []
-		if var ind = columnRange.firstIndex(of: self.column) {
+		if let ind = columnRange.firstIndex(of: self.column) {
 			var row = self.row
 			var i = ind
 			while (i < 7) && (row < 8) {
@@ -278,12 +280,10 @@ class Bishop: Piece {
 				row += 1
 				let move: String = "\(columnRange[i])\(row)"
 				let moveCheck: (isPiece: Bool, isWhite: Bool) = Game.checkMoves(move)
-				if !moveCheck.isPiece {
-					res.append(move)
-				}
-				if moveCheck.isPiece && moveCheck.isWhite != self.isWhite {
-					res.append(move)
+				if moveCheck.isPiece {
 					break
+				} else {
+					res.append(move)
 				}
 			}
 			row = self.row
@@ -293,12 +293,10 @@ class Bishop: Piece {
 				row += 1
 				let move: String = "\(columnRange[i])\(row)"
 				let moveCheck: (isPiece: Bool, isWhite: Bool) = Game.checkMoves(move)
-				if !moveCheck.isPiece {
-					res.append(move)
-				}
-				if moveCheck.isPiece && moveCheck.isWhite != self.isWhite {
-					res.append(move)
+				if moveCheck.isPiece {
 					break
+				} else {
+					res.append(move)
 				}
 			}
 			row = self.row
@@ -308,12 +306,10 @@ class Bishop: Piece {
 				row -= 1
 				let move: String = "\(columnRange[i])\(row)"
 				let moveCheck: (isPiece: Bool, isWhite: Bool) = Game.checkMoves(move)
-				if !moveCheck.isPiece {
-					res.append(move)
-				}
-				if moveCheck.isPiece && moveCheck.isWhite != self.isWhite {
-					res.append(move)
+				if moveCheck.isPiece {
 					break
+				} else {
+					res.append(move)
 				}
 			}
 			row = self.row
@@ -323,12 +319,10 @@ class Bishop: Piece {
 				row -= 1
 				let move: String = "\(columnRange[i])\(row)"
 				let moveCheck: (isPiece: Bool, isWhite: Bool) = Game.checkMoves(move)
-				if !moveCheck.isPiece {
-					res.append(move)
-				}
-				if moveCheck.isPiece && moveCheck.isWhite != self.isWhite {
-					res.append(move)
+				if moveCheck.isPiece {
 					break
+				} else {
+					res.append(move)
 				}
 			}
 		}
@@ -357,12 +351,10 @@ class Rook: Piece {
 				i += 1
 				let move: String = "\(columnRange[i])\(row)"
 				let moveCheck: (isPiece: Bool, isWhite: Bool) = Game.checkMoves(move)
-				if !moveCheck.isPiece {
-					res.append(move)
-				}
-				if moveCheck.isPiece && moveCheck.isWhite != self.isWhite {
-					res.append(move)
+				if moveCheck.isPiece {
 					break
+				} else {
+					res.append(move)
 				}
 			}
 			i = ind
@@ -370,12 +362,10 @@ class Rook: Piece {
 				i -= 1
 				let move: String = "\(columnRange[i])\(row)"
 				let moveCheck: (isPiece: Bool, isWhite: Bool) = Game.checkMoves(move)
-				if !moveCheck.isPiece {
-					res.append(move)
-				}
-				if moveCheck.isPiece && moveCheck.isWhite != self.isWhite {
-					res.append(move)
+				if moveCheck.isPiece {
 					break
+				} else {
+					res.append(move)
 				}
 			}
 			i = ind
@@ -383,25 +373,21 @@ class Rook: Piece {
 				row += 1
 				let move: String = "\(columnRange[i])\(row)"
 				let moveCheck: (isPiece: Bool, isWhite: Bool) = Game.checkMoves(move)
-				if !moveCheck.isPiece {
-					res.append(move)
-				}
-				if moveCheck.isPiece && moveCheck.isWhite != self.isWhite {
-					res.append(move)
+				if moveCheck.isPiece {
 					break
+				} else {
+					res.append(move)
 				}
 			}
 			row = self.row
-			while row > 0 {
+			while row > 1 {
 				row -= 1
 				let move: String = "\(columnRange[i])\(row)"
 				let moveCheck: (isPiece: Bool, isWhite: Bool) = Game.checkMoves(move)
-				if !moveCheck.isPiece {
-					res.append(move)
-				}
-				if moveCheck.isPiece && moveCheck.isWhite != self.isWhite {
-					res.append(move)
+				if moveCheck.isPiece {
 					break
+				} else {
+					res.append(move)
 				}
 			}
 		}
@@ -428,7 +414,7 @@ class Queen: Piece {
 	private func getPossibleMovesB() -> [String] {
 		let columnRange: [Character] = ["a", "b", "c", "d", "e", "f", "g", "h"]
 		var res: [String] = []
-		if var ind = columnRange.firstIndex(of: self.column) {
+		if let ind = columnRange.firstIndex(of: self.column) {
 			var row = self.row
 			var i = ind
 			while (i < 7) && (row < 8) {
@@ -436,12 +422,10 @@ class Queen: Piece {
 				row += 1
 				let move: String = "\(columnRange[i])\(row)"
 				let moveCheck: (isPiece: Bool, isWhite: Bool) = Game.checkMoves(move)
-				if !moveCheck.isPiece {
-					res.append(move)
-				}
-				if moveCheck.isPiece && moveCheck.isWhite != self.isWhite {
-					res.append(move)
+				if moveCheck.isPiece {
 					break
+				} else {
+					res.append(move)
 				}
 			}
 			row = self.row
@@ -451,12 +435,10 @@ class Queen: Piece {
 				row += 1
 				let move: String = "\(columnRange[i])\(row)"
 				let moveCheck: (isPiece: Bool, isWhite: Bool) = Game.checkMoves(move)
-				if !moveCheck.isPiece {
-					res.append(move)
-				}
-				if moveCheck.isPiece && moveCheck.isWhite != self.isWhite {
-					res.append(move)
+				if moveCheck.isPiece {
 					break
+				} else {
+					res.append(move)
 				}
 			}
 			row = self.row
@@ -466,12 +448,10 @@ class Queen: Piece {
 				row -= 1
 				let move: String = "\(columnRange[i])\(row)"
 				let moveCheck: (isPiece: Bool, isWhite: Bool) = Game.checkMoves(move)
-				if !moveCheck.isPiece {
-					res.append(move)
-				}
-				if moveCheck.isPiece && moveCheck.isWhite != self.isWhite {
-					res.append(move)
+				if moveCheck.isPiece {
 					break
+				} else {
+					res.append(move)
 				}
 			}
 			row = self.row
@@ -481,12 +461,10 @@ class Queen: Piece {
 				row -= 1
 				let move: String = "\(columnRange[i])\(row)"
 				let moveCheck: (isPiece: Bool, isWhite: Bool) = Game.checkMoves(move)
-				if !moveCheck.isPiece {
-					res.append(move)
-				}
-				if moveCheck.isPiece && moveCheck.isWhite != self.isWhite {
-					res.append(move)
+				if moveCheck.isPiece {
 					break
+				} else {
+					res.append(move)
 				}
 			}
 		}
@@ -504,12 +482,10 @@ class Queen: Piece {
 				i += 1
 				let move: String = "\(columnRange[i])\(row)"
 				let moveCheck: (isPiece: Bool, isWhite: Bool) = Game.checkMoves(move)
-				if !moveCheck.isPiece {
-					res.append(move)
-				}
-				if moveCheck.isPiece && moveCheck.isWhite != self.isWhite {
-					res.append(move)
+				if moveCheck.isPiece {
 					break
+				} else {
+					res.append(move)
 				}
 			}
 			i = ind
@@ -517,12 +493,10 @@ class Queen: Piece {
 				i -= 1
 				let move: String = "\(columnRange[i])\(row)"
 				let moveCheck: (isPiece: Bool, isWhite: Bool) = Game.checkMoves(move)
-				if !moveCheck.isPiece {
-					res.append(move)
-				}
-				if moveCheck.isPiece && moveCheck.isWhite != self.isWhite {
-					res.append(move)
+				if moveCheck.isPiece {
 					break
+				} else {
+					res.append(move)
 				}
 			}
 			i = ind
@@ -530,25 +504,21 @@ class Queen: Piece {
 				row += 1
 				let move: String = "\(columnRange[i])\(row)"
 				let moveCheck: (isPiece: Bool, isWhite: Bool) = Game.checkMoves(move)
-				if !moveCheck.isPiece {
-					res.append(move)
-				}
-				if moveCheck.isPiece && moveCheck.isWhite != self.isWhite {
-					res.append(move)
+				if moveCheck.isPiece {
 					break
+				} else {
+					res.append(move)
 				}
 			}
 			row = self.row
-			while row > 0 {
+			while row > 1 {
 				row -= 1
 				let move: String = "\(columnRange[i])\(row)"
 				let moveCheck: (isPiece: Bool, isWhite: Bool) = Game.checkMoves(move)
-				if !moveCheck.isPiece {
-					res.append(move)
-				}
-				if moveCheck.isPiece && moveCheck.isWhite != self.isWhite {
-					res.append(move)
+				if moveCheck.isPiece {
 					break
+				} else {
+					res.append(move)
 				}
 			}
 		}
@@ -568,22 +538,29 @@ class King: Piece {
 	
 	override func getPossibleMoves() -> (Bool, [String]) {
 		//"One square"
-		let columnRange: [Character] = ["a", "b", "c", "d", "e", "f", "g", "h"]
+		let colRange: [Character] = ["a", "b", "c", "d", "e", "f", "g", "h"]
 		var moves: [String] = []
 		var res: [String] = []
-		if let i = columnRange.firstIndex(of: self.column) {
+		if let i = colRange.firstIndex(of: self.column) {
 			let row = self.row
-			moves.append("\(columnRange[i + 1])\(row)")
-			moves.append("\(columnRange[i - 1])\(row)")
-			moves.append("\(columnRange[i])\(row + 1)")
-			moves.append("\(columnRange[i])\(row - 1)")
-			moves.append("\(columnRange[i + 1])\(row + 1)")
-			moves.append("\(columnRange[i - 1])\(row + 1)")
-			moves.append("\(columnRange[i + 1])\(row - 1)")
-			moves.append("\(columnRange[i - 1])\(row - 1)")
+			if i > 0 {
+				moves.append("\(colRange[i - 1])\(row)")
+				if row > 1 { moves.append("\(colRange[i - 1])\(row - 1)") }
+				if row < 8 { moves.append("\(colRange[i - 1])\(row + 1)") }
+			}
+			
+			if i < 7 {
+				moves.append("\(colRange[i + 1])\(row)")
+				if row > 1 { moves.append("\(colRange[i + 1])\(row - 1)") }
+				if row < 8 { moves.append("\(colRange[i + 1])\(row + 1)") }
+			}
+			
+			if row > 1 { moves.append("\(colRange[i])\(row - 1)") }
+			if row < 8 { moves.append("\(colRange[i])\(row + 1)") }
 		}
-		let temp: [String] = Game.checkMoves(moves, self.isWhite)
-		res = Game.checkPossCheck(temp)
+		let temp: [String] = Game.checkMoves(moves)
+		//res = Game.checkPossCheck(temp)
+		res = temp
 		
 		return ((res.isEmpty) ? false : true, res)
 	}
