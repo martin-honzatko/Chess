@@ -8,8 +8,6 @@
 import Foundation
 
 // TODO:
-// Implement move functionality + figure how to implement Pawn taking because it's 1 forward vertically
-// Add and implement casting functionality
 // Add and implement en passant functionality
 
 class Piece {

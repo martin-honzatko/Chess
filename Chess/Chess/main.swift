@@ -36,6 +36,24 @@ func play() {
 		} else if usrInput.lowercased() == "resign" {
 			print("\((isWhite) ? "Black" : "White") has won!")
 			run = false
+		} else if usrInput.lowercased() == "cast" {
+			print("Cast Kingside or Queenside? [k/q]:", terminator: " ")
+			let cast: Character = Character(readLine() ?? "")
+			if cast.lowercased() == "k" {
+				if Game.casting(isWhite: isWhite, kingside: true) {
+					print("Successfuly casted Kingside")
+				} else {
+					print("Unsuccessfuly casted Kingside")
+				}
+			} else if cast.lowercased() == "q" {
+				if Game.casting(isWhite: isWhite, kingside: false) {
+					print("Successfuly casted Queenside")
+				} else {
+					print("Unsuccessfuly casted Queenside")
+				}
+			} else {
+				print("Illegal command, please try again!")
+			}
 		} else if usrInput.lowercased() == "moves" {
 			Game.printMoves(isWhite: isWhite)
 		} else {
@@ -72,6 +90,7 @@ private func help() {
 	print("* type 'help' for help")
 	print("* type 'board' to see the board again")
 	print("* type 'resign' to resign")
+	print("* type 'cast' for casting")
 	print("* type 'moves' to list all possible moves")
 	print("* type a square (e.g. b1, e2) to list possible moves for that square")
 	print("* type UCI (e.g. b1c3, e7e8q) to make a move")

@@ -61,6 +61,70 @@ class Game {
 		}
 	}
 	
+	static func casting(isWhite: Bool, kingside: Bool) -> Bool {
+		var r: Bool = false
+		var k: Bool = false
+		var empty: Bool = true
+		
+		for piece in Game.pieces {
+			if piece.isWhite == isWhite {
+				if piece is King && piece.moveCounter == 0 && piece.column == "e" {
+					k = true
+				}
+				if kingside {
+					if piece is Rook && piece.moveCounter == 0 && piece.column == "h" {
+						r = true
+					}
+					if (piece.row == 1 || piece.row == 8) && (piece.column == "f" || piece.column == "g") {
+						empty = false
+					}
+				} else {
+					if piece is Rook && piece.moveCounter == 0 && piece.column == "a" {
+						r = true
+					}
+					if (piece.row == 1 || piece.row == 8) && (piece.column == "b" || piece.column == "c" || piece.column == "d") {
+						empty = false
+					}
+				}
+			}
+		}
+		
+		if k && r && empty {
+			var setR: Bool = false
+			var setK: Bool = false
+			var setKR: Bool = false
+			for piece in Game.pieces {
+				if piece.isWhite == isWhite && !setKR {
+					if kingside {
+						if piece is King {
+							piece.column = "g"
+							setK = true
+						}
+						if piece is Rook && piece.column == "h" {
+							piece.column = "f"
+							setR = true
+						}
+						if setK && setR { setKR = true }
+					} else {
+						if piece is King {
+							piece.column = "c"
+							setK = true
+						}
+						if piece is Rook && piece.column == "a" {
+							piece.column = "d"
+							setR = true
+						}
+						if setK && setR { setKR = true }
+					}
+				}
+			}
+			
+			if setKR { return true }
+		}
+		
+		return false
+	}
+	
 	static func check(isWhite: Bool) -> Bool {
 		var king: Piece = King(row: 1, column: "a")
 		for piece in Game.pieces {
