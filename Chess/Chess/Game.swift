@@ -8,56 +8,16 @@
 import Foundation
 
 class Game {
+	/************************************************************/
+	/*		CONSTANTS AND VARIABLES		   */
+	/************************************************************/
 	private static var pieces: [Piece] = []
 	private static let rowRange: ClosedRange<Int> = 1...8
 	private static let columnRange: [Character] = ["a", "b", "c", "d", "e", "f", "g", "h"]
 	
-	static func printMoves(isWhite: Bool) {
-		print("Possible moves:")
-		for piece in Game.pieces {
-			if piece.isWhite == isWhite {
-				print("\(piece.getPosition()) - {", terminator: "")
-				let poss: (correct: Bool, moves: [String]) = piece.getPossibleMoves()
-				if poss.correct {
-					if poss.moves.isEmpty {
-						print(" No moves! }")
-					} else {
-						for i in 0..<(poss.moves.count - 1) {
-							print("\(poss.moves[i])", terminator: ", ")
-						}
-						print("\(poss.moves[poss.moves.count - 1])}")
-					}
-				} else {
-					print(" No moves! }")
-				}
-			}
-		}
-	}
-	
-	static func printMoves(_ pos: String) {
-		guard pos.count == 2 else {
-			return
-		}
-		for piece in Game.pieces {
-			if piece.getPosition() == pos {
-				print("Possible moves of \(piece.getPosition()): {", terminator: "")
-				let poss: (correct: Bool, moves: [String]) = piece.getPossibleMoves()
-				if poss.correct {
-					if poss.moves.isEmpty {
-						print(" No moves! }")
-					} else {
-						for i in 0..<(poss.moves.count - 1) {
-							print("\(poss.moves[i])", terminator: ", ")
-						}
-						print("\(poss.moves[poss.moves.count - 1])}")
-					}
-				} else {
-					print(" No moves! }")
-				}
-			}
-		}
-	}
-	
+	/************************************************************/
+	/*			  GAME METHODS			   */
+	/************************************************************/
 	static func move(isWhite: Bool, row: Int, column: Character, newRow: Int, newColumn: Character) {
 		for piece in Game.pieces {
 			if piece.getPosition() == "\(column)\(row)" && piece.isWhite == isWhite {
@@ -93,6 +53,9 @@ class Game {
 		return false
 	}
 	
+	/************************************************************/
+	/*			 MOVE CHECKERS			   */
+	/************************************************************/
 	static func checkPossCheck(_ moves: [String]) -> [String] {
 		var moves = moves
 		for piece in Game.pieces {
@@ -173,6 +136,9 @@ class Game {
 		return (isPiece, wOrB)
 	}
 	
+	/************************************************************/
+	/*			  PRINT METHODS			   */
+	/************************************************************/
 	static func printBoard() {
 		print()
 		for row in rowRange.reversed() {
@@ -197,6 +163,55 @@ class Game {
 		return false
 	}
 	
+	static func printMoves(isWhite: Bool) {
+		print("Possible moves:")
+		for piece in Game.pieces {
+			if piece.isWhite == isWhite {
+				print("\(piece.getPosition()) - {", terminator: "")
+				let poss: (correct: Bool, moves: [String]) = piece.getPossibleMoves()
+				if poss.correct {
+					if poss.moves.isEmpty {
+						print(" No moves! }")
+					} else {
+						for i in 0..<(poss.moves.count - 1) {
+							print("\(poss.moves[i])", terminator: ", ")
+						}
+						print("\(poss.moves[poss.moves.count - 1])}")
+					}
+				} else {
+					print(" No moves! }")
+				}
+			}
+		}
+	}
+	
+	static func printMoves(_ pos: String) {
+		guard pos.count == 2 else {
+			return
+		}
+		for piece in Game.pieces {
+			if piece.getPosition() == pos {
+				print("Possible moves of \(piece.getPosition()): {", terminator: "")
+				let poss: (correct: Bool, moves: [String]) = piece.getPossibleMoves()
+				if poss.correct {
+					if poss.moves.isEmpty {
+						print(" No moves! }")
+					} else {
+						for i in 0..<(poss.moves.count - 1) {
+							print("\(poss.moves[i])", terminator: ", ")
+						}
+						print("\(poss.moves[poss.moves.count - 1])}")
+					}
+				} else {
+					print(" No moves! }")
+				}
+			}
+		}
+	}
+	
+	/************************************************************/
+	/*			DEFAULT BOARD VALUES	   */
+	/************************************************************/
 	static func createDefaultBoard() {
 		//Pawns
 		for col in Game.columnRange {
